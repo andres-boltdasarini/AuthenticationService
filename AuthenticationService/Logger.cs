@@ -1,32 +1,55 @@
-﻿namespace AuthenticationService
-{
-    public class Logger
-    {
-        private readonly string _logDirectory;
-        private const string EventsFile = "events.txt";
-        private const string ErrorsFile = "errors.txt";
+﻿using System;
+using System.IO;
+using System.Threading;
 
-        public Logger(IWebHostEnvironment env)
+namespace AuthenticationService
+{
+    public class Logger : ILogger
+    {
+        private ReaderWriterLockSlim lock_ = new ReaderWriterLockSlim();
+
+        private string logDirectory { get; set; }
+
+        public Logger()
         {
-            // Создаем уникальную папку для логов при запуске
-            _logDirectory = Path.Combine(
-                env.ContentRootPath,
-                "Logs",
-                DateTime.Now.ToString("yyyyMMdd_HHmmss")
-            );
-            Directory.CreateDirectory(_logDirectory);
+            logDirectory = AppDomain.CurrentDomain.BaseDirectory + @"/_logs/" + DateTime.Now.ToString("dd-MM-yy HH-mm-ss") + @"/";
+
+            if (!Directory.Exists(logDirectory))
+                Directory.CreateDirectory(logDirectory);
         }
 
         public void WriteEvent(string eventMessage)
         {
-            string filePath = Path.Combine(_logDirectory, EventsFile);
-            File.AppendAllText(filePath, $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} [EVENT] {eventMessage}\n");
+            lock_.EnterWriteLock();
+            try
+            {
+                using (StreamWriter writer = new StreamWriter(logDirectory + "events.txt", append: true))
+                {
+                    writer.WriteLine(eventMessage);
+                }
+            }
+            finally
+            {
+                lock_.ExitWriteLock();
+            }
+
         }
 
         public void WriteError(string errorMessage)
         {
-            string filePath = Path.Combine(_logDirectory, ErrorsFile);
-            File.AppendAllText(filePath, $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} [ERROR] {errorMessage}\n");
+            lock_.EnterWriteLock();
+            try
+            {
+                using (StreamWriter writer = new StreamWriter("errors.txt", append: true))
+                {
+                    writer.WriteLine(errorMessage);
+                }
+            }
+            finally
+            {
+                lock_.ExitWriteLock();
+            }
+
         }
     }
 }
