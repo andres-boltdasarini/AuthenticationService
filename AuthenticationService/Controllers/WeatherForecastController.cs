@@ -11,14 +11,13 @@ namespace AuthenticationService.Controllers
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
 
-        private readonly ILogger<WeatherForecastController> _logger;
+        private readonly Logger _logger;
 
-        public WeatherForecastController()
+        public WeatherForecastController(Logger logger)
         {
-            var logger = new Logger();
-
-            logger.WriteEvent("Сообщение о событии в программе");
-            logger.WriteError("Сообщение об ошибки в программе");
+            _logger = logger;
+            _logger.WriteEvent("Сообщение о событии в программе");
+            _logger.WriteError("Сообщение об ошибке в программе");
         }
 
         [HttpGet(Name = "GetWeatherForecast")]
