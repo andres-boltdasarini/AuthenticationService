@@ -10,30 +10,37 @@ namespace AuthenticationService.Controllers
     {
         private IMapper _mapper;
         private ILogger _logger;
+        private IUserRepository _userRepository;
         public UserController(
             ILogger logger,
-            IMapper mapper)
+            IMapper mapper,
+            IUserRepository userRepository)
         {
             _logger = logger;
             _mapper = mapper;
+            _userRepository = userRepository;
 
             logger.WriteEvent("Сообщение о событии в программе");
             logger.WriteError("Сообщение об ошибки в программе");
-
+            
         }
 
         [HttpGet]
-        public User GetUser()
+        public IEnumerable<User> GetUsers()
         {
-            return new User()
+            return _userRepository.GetAll();
+        }
+
+        [HttpGet]
+        [Route("{login}")]
+        public ActionResult<User> GetUserByLogin(string login)
+        {
+            var user = _userRepository.GetByLogin(login);
+            if (user == null)
             {
-                Id = Guid.NewGuid(),
-                FirstName = "Иван",
-                LastName = "Иванов",
-                Email = "ivan@gmail.com",
-                Password = "11111122222qq",
-                Login = "ivanov"
-            };
+                return NotFound();
+            }
+            return user;
         }
 
         [HttpGet]
