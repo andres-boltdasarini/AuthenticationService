@@ -8,12 +8,14 @@ namespace AuthenticationService
         public Guid Id { get; set; }
         public string FullName { get; set; }
         public bool FromRussia { get; set; }
+        public Role Role { get; set; }
 
         public UserViewModel(User user)
         {
             Id = user.Id;
             FullName = GetFullName(user.FirstName, user.LastName);
             FromRussia = GetFromRussiaValue(user.Email);
+            Role = user.Role;
         }
  
 

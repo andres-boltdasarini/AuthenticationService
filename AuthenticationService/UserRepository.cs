@@ -14,7 +14,8 @@ namespace AuthenticationService
                 LastName = "Иванов",
                 Email = "ivan@gmail.com",
                 Password = "11111122222qq",
-                Login = "ivanov"
+                Login = "ivanov",
+                Role = new Role { Id = 1, Name = "Admin" }
             },
             new User
             {
@@ -23,7 +24,8 @@ namespace AuthenticationService
                 LastName = "Петров",
                 Email = "petr@mail.ru",
                 Password = "password123",
-                Login = "petrov"
+                Login = "petrov",
+                Role = new Role { Id = 2, Name = "User" }
             },
             new User
             {
@@ -32,7 +34,8 @@ namespace AuthenticationService
                 LastName = "Сидорова",
                 Email = "maria@yandex.ru",
                 Password = "qwerty456",
-                Login = "sidorova"
+                Login = "sidorova",
+                Role = new Role { Id = 2, Name = "User" }
             }
         };
 
