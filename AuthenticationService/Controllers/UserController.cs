@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Security.Authentication;
 
 namespace AuthenticationService.Controllers
 {
@@ -61,5 +62,23 @@ namespace AuthenticationService.Controllers
 
             return userViewModel;
         }
+
+[HttpPost]
+[Route("authenticate")]
+public UserViewModel Authenticate(string login, string password) 
+{
+  if (String.IsNullOrEmpty(login) ||
+    String.IsNullOrEmpty(password))
+    throw new ArgumentNullException("Запрос не корректен");
+
+  User user = _userRepository.GetByLogin(login);
+  if (user is null)
+    throw new AuthenticationException("Пользователь на найден");
+
+  if (user.Password != password)
+    throw new AuthenticationException("Введенный пароль не корректен");
+
+  return _mapper.Map < UserViewModel > (user);
+}
     }
 }
