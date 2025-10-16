@@ -47,7 +47,7 @@ namespace AuthenticationService.Controllers
             return user;
         }
 
-        [Authorize]
+        [Authorize(Roles = "Администратор")]
         [HttpGet]
         [Route("viewmodel")]
         public UserViewModel GetUserViewModel()
@@ -84,7 +84,8 @@ public async Task<ActionResult<UserViewModel>> Authenticate(string login, string
 
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, user.Login)
+                new Claim(ClaimTypes.Name, user.Login),
+                new Claim(ClaimTypes.Role, user.Role.Name)
             };
             
             var claimsIdentity = new ClaimsIdentity(
