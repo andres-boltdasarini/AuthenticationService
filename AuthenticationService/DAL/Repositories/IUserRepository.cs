@@ -1,6 +1,6 @@
-using System.Collections.Generic;
+using AuthenticationService.DAL.Models;
 
-namespace AuthenticationService
+namespace AuthenticationService.DAL.Repositories
 {
     public interface IUserRepository
     {
