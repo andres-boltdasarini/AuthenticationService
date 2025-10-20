@@ -11,10 +11,15 @@ public class LogMiddleware
     _logger = logger;
   }
 
-  public async Task Invoke(HttpContext httpContext) 
-  {
-    _logger.WriteEvent("Я твой Middleware");
-    await _next(httpContext);
-  }
+        public async Task Invoke(HttpContext httpContext) 
+        {
+            // Получаем IP-адрес клиента
+            var ipAddress = httpContext.Connection.RemoteIpAddress?.ToString() ?? "Unknown";
+            
+            // Записываем IP-адрес в логгер
+            _logger.WriteEvent($"IP-адрес клиента: {ipAddress}");
+            
+            await _next(httpContext);
+        }
 }
 }
